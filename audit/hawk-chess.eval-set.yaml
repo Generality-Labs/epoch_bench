@@ -8,7 +8,7 @@ name: audit-epoch-chess
 # pinned: the runner's S3 credentials only reach evals/<eval_set_id>/, so the input
 # logs live INSIDE this eval set's own prefix (run with --log-dir-allow-dirty).
 # bump the suffix for each new run.
-eval_set_id: audit-epoch-chess-p1
+eval_set_id: audit-epoch-chess-p2
 
 packages:
   - git+https://github.com/Generality-Labs/inspect_audit@grade-reset
@@ -23,7 +23,7 @@ tasks:
           task: bench/Chess Puzzles
           # our copy of Epoch's 38 logs (their bucket went 403 in 2026-09; audit/logs.csv
           # has the original URLs), placed under this eval set's own S3 prefix
-          logs: s3://arcadia-impact-generality-inspect/evals/audit-epoch-chess-p1/inputs/epoch-chess-logs/
+          logs: s3://arcadia-impact-generality-inspect/evals/audit-epoch-chess-p2/inputs/epoch-chess-logs/
           items: [gold-answer, insufficiently-specified, answer-format, red-teaming, other-findings]
           auditor_image: ghcr.io/generality-labs/inspect-audit-auditor:0.2
 
