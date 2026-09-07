@@ -1,9 +1,9 @@
 # Audit Epoch AI's Chess Puzzles on Hawk.
 #
 # General: inspect_audit (the auditor cell, tools, grade, concordance, verdicts) and
-# its one published auditor image. Bespoke: this file and the epoch-bench task
-# package -- the chess engine is installed by the `setup` script at sample start
-# and the `notes` tell the auditor to use it.
+# its published auditor image. Bespoke: this file and the epoch-bench task package.
+# The auditor installs any tooling it decides it needs (the local pilot showed it
+# reaching for stockfish + python-chess unprompted).
 name: audit-epoch-chess
 
 packages:
@@ -20,14 +20,6 @@ tasks:
           # Epoch's 38 public logs; the manifest is fetched by the (trusted) runner
           logs: https://raw.githubusercontent.com/Generality-Labs/epoch_bench/main/audit/logs.csv
           items: [gold-answer, insufficiently-specified, answer-format, red-teaming, other-findings]
-          setup: >-
-            apt-get update -qq && apt-get install -y -qq --no-install-recommends stockfish
-            && pip install -q --no-cache-dir python-chess
-          notes: |
-            The gold move was produced by a chess engine (benchmark/puzzle_generator.py
-            has the generation criteria: best move at depth 18, second-best at least
-            180 centipawns worse). Judge moves by engine search, not by eye: stockfish
-            is at /usr/games/stockfish and python-chess is installed.
           auditor_image: ghcr.io/generality-labs/inspect-audit-auditor:0.2
 
 # own OpenRouter key, straight to the provider, no middleman
@@ -37,13 +29,14 @@ models:
     items:
       - name: openrouter/openai/gpt-5.6-luna
 model_roles:
-  # the extractor Epoch's scorer calls; 25 of 38 logs used gemini-2.0-flash-001
-  # (12 used gpt-5-mini-2025-08-07). Concordance replays against this one.
+  # the extractor Epoch's scorer calls. Epoch used gemini-2.0-flash-001 (25 logs,
+  # since retired from OpenRouter) and gpt-5-mini-2025-08-07 (12 logs); this is
+  # the surviving one.
   grader:
     package: openai
     name: openai
     items:
-      - name: openrouter/google/gemini-2.0-flash-001
+      - name: openrouter/openai/gpt-5-mini
 runner:
   environment:
     INSPECT_ACTION_RUNNER_REFRESH_URL: ""
@@ -51,7 +44,7 @@ runner:
     - name: OPENROUTER_API_KEY
       description: OpenRouter key for the auditor model and the replayed extractor
 
-limit: 10          # pilot
+limit: 10          # pilot; the dataset is 100
 epochs: 1
 token_limit: 4000000
 time_limit: 3600

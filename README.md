@@ -16,14 +16,3 @@ Epoch AI's **Chess Puzzles** Inspect task, reconstructed so it can be audited wi
 Logs: https://epoch-benchmarks-production-public.s3.us-east-2.amazonaws.com/inspect_ai_logs/<id>.eval
 (manifest in `audit/logs.csv`).
 
-## Auditing it
-
-`audit/hawk-chess.eval-set.yaml` runs the audit on Hawk with the general
-`inspect_audit` auditor image; the chess engine is installed at sample start by the
-`setup` script rather than baked into a bespoke image. Locally:
-
-```sh
-inspect eval inspect_audit/audit -T 'task=bench/Chess Puzzles' -T logs=<dir of the 38 logs> \
-  -T 'setup=apt-get update -qq && apt-get install -y -qq stockfish && pip install -q python-chess' \
-  --model openrouter/openai/gpt-5.6-luna --model-role grader=openrouter/google/gemini-2.0-flash-001 --limit 10
-```
