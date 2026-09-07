@@ -28,7 +28,7 @@ tasks:
             has the generation criteria: best move at depth 18, second-best at least
             180 centipawns worse). Judge moves by engine search, not by eye: stockfish
             is at /usr/games/stockfish and python-chess is installed.
-          auditor_image: ghcr.io/generality-labs/inspect-audit-auditor:0.1
+          auditor_image: ghcr.io/generality-labs/inspect-audit-auditor:0.2
 
 # own OpenRouter key, straight to the provider, no middleman
 models:
