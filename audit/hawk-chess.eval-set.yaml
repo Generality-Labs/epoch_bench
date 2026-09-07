@@ -17,8 +17,10 @@ tasks:
       - name: audit
         args:
           task: bench/Chess Puzzles
-          # Epoch's 38 public logs; the manifest is fetched by the (trusted) runner
-          logs: https://raw.githubusercontent.com/Generality-Labs/epoch_bench/main/audit/logs.csv
+          # our copy of Epoch's 38 logs, in Hawk's own bucket (Epoch's bucket went
+          # 403 in 2026-09; audit/logs.csv lists the original URLs). Inspect reads
+          # s3:// log directories natively, the runner already has the credentials.
+          logs: s3://arcadia-impact-generality-inspect/audit-inputs/epoch-chess-logs/
           items: [gold-answer, insufficiently-specified, answer-format, red-teaming, other-findings]
           auditor_image: ghcr.io/generality-labs/inspect-audit-auditor:0.2
 
