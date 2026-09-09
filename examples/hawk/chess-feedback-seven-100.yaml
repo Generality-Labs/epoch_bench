@@ -71,4 +71,3 @@ metadata:
   pilot: Seven models, all 100 chess puzzles, five feedback attempts; API/task errors
     retried, wrong guesses never resampled.
   reference_pilot: chess-feedback-glm53-10-rsdkijf6fnztnbpf
-retry_cleanup: false
