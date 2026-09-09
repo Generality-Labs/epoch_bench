@@ -1,0 +1,35 @@
+name: chess-feedback-glm53-10
+tasks:
+  - package: git+https://github.com/Generality-Labs/epoch_bench@035a06344e147c9606604855ac488e8454591fe1
+    name: bench
+    items:
+      - name: Chess Puzzles Feedback
+        args:
+          max_attempts: 5
+models:
+  - package: openai
+    name: openrouter
+    items:
+      - name: z-ai/glm-5.3-flash
+        args:
+          base_url: https://openrouter.ai/api/v1
+          config:
+            max_tokens: 131072
+limit: 10
+epochs: 1
+max_connections: 10
+max_retries: 10
+timeout: 3600
+time_limit: 14400
+token_limit: 4000000
+retry_attempts: 0
+runner:
+  environment:
+    HAWK_API_URL: https://api.hawk.hawk.generalitylabs.ai
+    HAWK_RUNNER_REFRESH_URL: ''
+  secrets:
+    - name: OPENROUTER_API_KEY
+metadata:
+  protocol: five sequential guesses with binary feedback; stop on success or unsubmitted token-truncated response
+  revision: 035a06344e147c9606604855ac488e8454591fe1
+  pilot: first 10 chess puzzles; deterministic grader

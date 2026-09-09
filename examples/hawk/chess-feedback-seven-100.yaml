@@ -1,0 +1,74 @@
+name: chess-feedback-seven-100
+tasks:
+- package: git+https://github.com/Generality-Labs/epoch_bench@035a06344e147c9606604855ac488e8454591fe1
+  name: bench
+  items:
+  - name: Chess Puzzles Feedback
+    args:
+      max_attempts: 5
+models:
+- package: openai
+  name: openrouter
+  items:
+  - name: openai/gpt-5.6-luna
+    args:
+      base_url: https://openrouter.ai/api/v1
+      config:
+        max_tokens: 128000
+        reasoning_effort: low
+  - name: qwen/qwen3.7-flash
+    args:
+      base_url: https://openrouter.ai/api/v1
+      config:
+        max_tokens: 65536
+  - name: google/gemini-3.6-flash
+    args:
+      base_url: https://openrouter.ai/api/v1
+      config:
+        max_tokens: 65536
+        reasoning_effort: low
+  - name: openai/gpt-5.6-sol
+    args:
+      base_url: https://openrouter.ai/api/v1
+      config:
+        max_tokens: 128000
+        reasoning_effort: low
+  - name: openai/gpt-5.6-terra
+    args:
+      base_url: https://openrouter.ai/api/v1
+      config:
+        max_tokens: 128000
+        reasoning_effort: low
+  - name: anthropic/claude-opus-5
+    args:
+      base_url: https://openrouter.ai/api/v1
+      config:
+        max_tokens: 128000
+        reasoning_effort: low
+  - name: z-ai/glm-5.3-flash
+    args:
+      base_url: https://openrouter.ai/api/v1
+      config:
+        max_tokens: 131072
+limit: 100
+epochs: 1
+max_connections: 10
+max_retries: 10
+timeout: 3600
+time_limit: 14400
+token_limit: 4000000
+retry_attempts: 2
+runner:
+  environment:
+    HAWK_API_URL: https://api.hawk.hawk.generalitylabs.ai
+    HAWK_RUNNER_REFRESH_URL: ''
+  secrets:
+  - name: OPENROUTER_API_KEY
+metadata:
+  protocol: five sequential guesses with binary feedback; stop on success or unsubmitted
+    token-truncated response
+  revision: 035a06344e147c9606604855ac488e8454591fe1
+  pilot: Seven models, all 100 chess puzzles, five feedback attempts; API/task errors
+    retried, wrong guesses never resampled.
+  reference_pilot: chess-feedback-glm53-10-rsdkijf6fnztnbpf
+retry_cleanup: false
