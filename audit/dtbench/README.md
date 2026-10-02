@@ -14,6 +14,9 @@ The original multiple-choice instruction is used verbatim. Inspect's generic
 multiple-choice solver is not used. The shuffle is reproducible by seed and
 question ID, with the resulting option order and target stored in each sample.
 Source no-CoT output postprocessing is retained and its raw completion saved.
+The unchanged source Question, Subject and grading modules are also retained in
+`reference_source/` as the independent test oracle, under the bundled MIT license.
+The tests need no separate source checkout or provider access.
 
 Invalid responses are unscored (NaN) for capability accuracy, matching the
 source's exclusion. The `valid_response_rate` metric reports their frequency.

@@ -17,7 +17,7 @@ from inspect_ai.scorer import SampleScore, Score
 from bench.task.dtbench import capability_questions, dtbench, grade_completion, normalize_no_cot, question_prompt, source_data, valid_accuracy, valid_response_mean, valid_response_rate
 from bench.task.dtbench import source_util
 
-UPSTREAM = Path(__file__).resolve().parents[2] / "dtbench-source/benchmark/code"
+UPSTREAM = Path(__file__).resolve().parents[1] / "audit/dtbench/reference_source"
 
 
 class DTBenchTests(unittest.TestCase):
@@ -108,6 +108,23 @@ class DTBenchTests(unittest.TestCase):
             self.assertEqual(log.status, "success")
             self.assertEqual(log.samples[0].scores["dtbench_score"].value, 1.0)
             self.assertIn("raw_completion_before_source_postprocessing", log.samples[0].metadata)
+
+    def test_all_no_cot_prompts_match_source_subject(self):
+        util = types.ModuleType("util")
+        util.ALPHABET = source_util.ALPHABET
+        util.MULTIPLE_CHOICE_INSTRUCTION = source_util.MULTIPLE_CHOICE_INSTRUCTION
+        provider = types.ModuleType("get_llm_response")
+        provider.LIST_OF_MODELS = ["test"]
+        provider.CONTEXT_LENGTHS_IN_TOKENS = {"test": 10000}
+        captured = []
+        provider.get_llm_response = lambda prompt, model: (captured.append(prompt) or "FINAL ANSWER: A.")
+        subject = types.ModuleType("source_subject")
+        with patch.dict(sys.modules, {"util": util, "get_llm_response": provider}):
+            exec((UPSTREAM / "subject.py").read_text(), subject.__dict__)
+        original = subject.Subject("test", allow_cot=False)
+        for sample in dtbench(allow_cot=False).dataset:
+            original.get_answer_subject_inner(question_prompt(sample.metadata["question_text"], sample.choices))
+            self.assertEqual(captured[-1], sample.input)
 
     def test_source_aggregation_weights_items_equally(self):
         reducer = valid_response_mean()
