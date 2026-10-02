@@ -112,3 +112,35 @@ items. These are the source CSV's scores, not current CRI leaderboard scores.
 python audit/dtbench/reproduce_paper.py /path/to/converted-logs \
   /path/to/pinned-source /path/to/paper-reproduction.json
 ```
+
+## Validation results (2026-10-02)
+
+Every model was run on all 407 capability items with three trials per item
+(1,221 responses each). The table uses the source's equal-item mean over valid
+answers, and raw current CRI accuracy rather than its chance-adjusted index.
+
+| Model | Inspect accuracy | Published raw accuracy | Difference | Invalid responses |
+| --- | ---: | ---: | ---: | ---: |
+| GPT-4o mini | 55.6102% | 54.40% | +1.2102 pp | 0 |
+| GPT-4.1 nano | 52.5578% | 52.53% | +0.0278 pp | 149 |
+| GPT-4.1 mini | 67.5676% | 68.80% | -1.2324 pp | 4 |
+
+All differences are within combined item-sampling uncertainty. This supports
+consistency with the current leaderboard; it does not establish identical
+provider settings or populations without the current per-item traces. Nano
+has three items with no valid answer and therefore an accuracy denominator of
+404. One failed Mini provider request was retried individually; its final log
+records that repair and has no request errors or truncations. Conservative
+usage-based validation cost was $2.6643, without cache discounts.
+
+The strict parser's invalid-answer exclusions are preserved. A separate Nano
+sensitivity check, removing Markdown asterisks and accepting case-insensitive
+unambiguous answer markers, recovers 143 of the 149 invalid responses. Its
+407-item accuracy is 52.2113%, a -0.3465 percentage-point change; this is not
+used as the native score. Exact duplicate items 79.17/79.18 are also preserved
+for source fidelity, rather than silently deduplicated.
+
+Deterministic evidence is separate from these live comparisons: all 188,820
+converted archived responses agree with their original recorded grades, and
+all 59 ordinary-model paper scores reproduce to a maximum absolute error of
+3.33e-16 on the original 370 shared valid items.
