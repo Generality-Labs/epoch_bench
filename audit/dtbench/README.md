@@ -57,6 +57,13 @@ published. Those logs should not support claims about the full elicitation.
 The archive contains the original study's older models; it does not establish
 the latest CRI leaderboard's per-item outcomes.
 
+Converted archives have unequal recorded trial counts. When streaming them or
+an item slice, use `read_eval_log_samples(path, all_samples_required=False)`.
+The conversion's `success` status means all selected archive records were
+converted; it does not promise a rectangular item-by-epoch matrix. The default
+strict iterator otherwise asks for unrecorded epochs and raises `IndexError`.
+Read the actual stored trials and keep the original IDs and trial ordinals.
+
 ```sh
 uv run --with json5 python audit/dtbench/build_dataset.py
 inspect eval bench/DTBench --model mockllm/model --limit 2
