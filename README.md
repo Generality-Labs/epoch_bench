@@ -1,5 +1,9 @@
 # epoch-bench
 
+DTBench's published questions and grader are also available as `bench/DTBench`.
+See [the port and result import notes](audit/dtbench/README.md) for provenance,
+scoring and converted historical logs.
+
 Epoch AI's **Chess Puzzles** Inspect task, reconstructed so it can be audited with
 `inspect_audit`.
 
