@@ -27,9 +27,10 @@ Invalid responses are unscored (NaN) for capability accuracy, matching the
 source's exclusion. The `valid_response_rate` metric reports their frequency.
 Repeated trials are averaged over valid responses within each item, then items
 are weighted equally. Items with no valid responses are absent from that
-accuracy mean. The source paper also sometimes restricts comparisons to the
-question IDs shared by the chosen model cohort; the imported per-subject score
-does not impose a new cohort intersection.
+accuracy mean. The original generation script includes trivia. The paper's
+capability analysis excludes trivia and restricts comparisons to question IDs
+with a valid response from every model in the chosen cohort. Imported per-subject
+scores retain the full generation population and impose neither filter.
 
 ## Published results
 
@@ -89,3 +90,18 @@ sampling noise on a fixed dataset. The current leaderboard does not publish its
 item IDs or provider transcripts, so population/protocol equivalence cannot be
 inferred from aggregate agreement alone. The original archive provides the
 separate deterministic grader and aggregation reproduction check.
+
+## Exact paper aggregation check
+
+`reproduce_paper.py` reads the pinned source's literal ordinary-model cohort and
+the converted logs, without loading source pickles. It excludes the 32 capability
+trivia items, intersects valid item support across all 59 models, and computes
+each model's equal-item mean. Against the pinned published
+`analysis_csvs/cap_versus_att.csv`, all 59 scores agree within `3.4e-16`.
+The released cohort has 370 shared valid items from 375 non-trivia capability
+items. These are the source CSV's scores, not current CRI leaderboard scores.
+
+```sh
+python audit/dtbench/reproduce_paper.py /path/to/converted-logs \
+  /path/to/pinned-source /path/to/paper-reproduction.json
+```
