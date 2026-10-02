@@ -50,7 +50,8 @@ def no_cot_postprocess() -> Solver:
         state.metadata["raw_completion_before_source_postprocessing"] = raw
         result = normalize_no_cot(raw)
         state.output.message.content = result
-        state.output.completion = result
+        if "completion" in type(state.output).model_fields:
+            state.output.completion = result
         # Keep the log's final assistant message consistent with the scored output.
         for msg in reversed(state.messages):
             if msg.role == "assistant":

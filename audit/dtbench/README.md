@@ -18,6 +18,11 @@ The unchanged source Question, Subject and grading modules are also retained in
 `reference_source/` as the independent test oracle, under the bundled MIT license.
 The tests need no separate source checkout or provider access.
 
+The source parity and mock execution tests also pass against Hawk's pinned
+METR Inspect revision `2203ee7a8f06d08eac37bcc1a5050cc2fc38b415`
+(`0.3.264.dev13`), as well as PyPI Inspect `0.3.266`. Cached completion
+postprocessing supports both field and property versions of Inspect's output API.
+
 Invalid responses are unscored (NaN) for capability accuracy, matching the
 source's exclusion. The `valid_response_rate` metric reports their frequency.
 Repeated trials are averaged over valid responses within each item, then items

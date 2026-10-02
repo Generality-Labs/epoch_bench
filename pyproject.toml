@@ -3,7 +3,7 @@ name = "epoch-bench"
 version = "0.1.0"
 description = "Inspect ports of published benchmarks and graders for auditing"
 requires-python = ">=3.11"
-dependencies = ["inspect-ai>=0.3.266"]
+dependencies = ["inspect-ai>=0.3.249"]
 
 [project.entry-points.inspect_ai]
 bench = "bench._registry"
