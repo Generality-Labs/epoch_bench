@@ -57,6 +57,13 @@ published. Those logs should not support claims about the full elicitation.
 The archive contains the original study's older models; it does not establish
 the latest CRI leaderboard's per-item outcomes.
 
+The completed default conversion has 119 logs and 188,820 capability responses.
+Including interventions produces 206 logs and 395,658 responses, with zero
+disagreements against recorded grades; all 119 default log summaries are
+unchanged. The 87 intervention logs carry the incomplete-prompt flag. Of the
+564,652 raw records, 166,064 are outside the current capability population and
+2,930 have outdated or mismatching items; these remain in the raw archive.
+
 Converted archives have unequal recorded trial counts. When streaming them or
 an item slice, use `read_eval_log_samples(path, all_samples_required=False)`.
 The conversion's `success` status means all selected archive records were
@@ -68,6 +75,7 @@ Read the actual stored trials and keep the original IDs and trial ordinals.
 uv run --with json5 python audit/dtbench/build_dataset.py
 inspect eval bench/DTBench --model mockllm/model --limit 2
 python audit/dtbench/import_results.py /path/to/results_db_new.zip /path/to/logs
+python audit/dtbench/import_results.py /path/to/results_db_new.zip /path/to/all-logs --include-interventions
 ```
 
 The task can be passed directly to `inspect_audit/audit`, with the converted
