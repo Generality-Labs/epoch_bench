@@ -1,9 +1,10 @@
 [project]
 name = "epoch-bench"
 version = "0.1.0"
-description = "Benchmark tasks staged for auditing: Epoch AI's Chess Puzzles (reconstructed) and BFCL (inspect_evals, agentic gates lifted) and HLE (inspect_evals, full static set)"
+description = "Benchmark tasks staged for auditing: Epoch AI's Chess Puzzles (reconstructed) and BFCL (inspect_evals, agentic gates lifted) and HLE (inspect_evals, full static set) and Chess Puzzles 2.1.0 (Epoch's chess-puzzles-mirror)"
 requires-python = ">=3.11"
-dependencies = ["inspect-ai>=0.3.152"]
+# chess: bench/chess_puzzles_v2 imports python-chess at load (via bench._registry)
+dependencies = ["inspect-ai>=0.3.152", "chess==1.11.2"]
 
 [project.optional-dependencies]
 bfcl = [
@@ -22,7 +23,11 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["bench"]
-include = ["bench/task/chess_puzzles/puzzles.csv"]
+include = [
+  "bench/task/chess_puzzles/puzzles.csv",
+  "bench/task/chess_puzzles_v2/puzzles.csv",
+  "bench/task/chess_puzzles_v2/CHANGELOG.md",
+]
 
 [tool.hatch.metadata]
 allow-direct-references = true

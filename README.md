@@ -40,3 +40,17 @@ images, sample ids (`hle_` + first 8 hex digits of md5(uid)), prompt, solver and
 default two-judge regex scorer (model roles `grader`, `grader_2`) are inspect_evals'.
 cais/hle is gated: loading needs `HF_TOKEN`. Install with `pip install
 "epoch-bench[hle] @ git+<this repo>@<sha>"`.
+
+
+## Chess Puzzles 2.1.0 (`bench/chess_puzzles_v2`)
+
+`bench/task/chess_puzzles_v2/` is Epoch's current Chess Puzzles task (version 2.1.0)
+vendored from https://github.com/epoch-research/chess-puzzles-mirror @ 62f4f8d3: the
+`qa_agent` scaffold with a `submit_answer` tool and output-token budget, and the
+deterministic scorer (exact UCI match, also accepting SAN and UCI variants read against
+the position with python-chess). The mirror's package is also named `bench`, so its files
+are copied here with only their imports changed; the task's two required arguments
+default to Epoch's published settings (`max_output_tokens=1000000`,
+`compaction_threshold_tokens=945000`). Sample ids are 1-100; the puzzles are the same 100
+as the 1.x reconstruction above. python-chess is a base dependency. Install with `pip install "epoch-bench @
+git+<this repo>@<sha>"`.
