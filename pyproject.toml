@@ -1,13 +1,16 @@
 [project]
 name = "epoch-bench"
 version = "0.1.0"
-description = "Benchmark tasks staged for auditing: Epoch AI's Chess Puzzles (reconstructed) and BFCL (inspect_evals, agentic gates lifted)"
+description = "Benchmark tasks staged for auditing: Epoch AI's Chess Puzzles (reconstructed) and BFCL (inspect_evals, agentic gates lifted) and HLE (inspect_evals, full static set)"
 requires-python = ">=3.11"
 dependencies = ["inspect-ai>=0.3.152"]
 
 [project.optional-dependencies]
 bfcl = [
   "inspect-evals[bfcl] @ git+https://github.com/UKGovernmentBEIS/inspect_evals.git@4e0615e5fd5eadd55a3508a8c20d1b97de992f5b",
+]
+hle = [
+  "inspect-evals @ git+https://github.com/UKGovernmentBEIS/inspect_evals.git@4e0615e5fd5eadd55a3508a8c20d1b97de992f5b",
 ]
 
 [project.entry-points.inspect_ai]

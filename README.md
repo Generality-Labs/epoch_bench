@@ -28,3 +28,15 @@ attempts generated with it are identical to inspect_evals'. Install with `pip in
 "epoch-bench[bfcl] @ git+<this repo>@<sha>"`. Samples carry `metadata.stratum`, the
 leaderboard's weighting stratum (non_live_ast, live_ast, irrelevance, multi_turn, memory,
 web_search).
+
+
+## HLE (`bench/hle`)
+
+`bench/task/hle/__init__.py` is `inspect_evals/hle` (pinned in `pyproject.toml` under the
+`hle` extra, inspect_evals@4e0615e, task version 8-E) with one default flipped:
+`only_hle_verified_gold=False`, so the population is the original 2,500-question static
+set (cais/hle @ 5a81a4c) rather than HLE-Verified's 668-item gold subset. Dataset,
+images, sample ids (`hle_` + first 8 hex digits of md5(uid)), prompt, solver and the
+default two-judge regex scorer (model roles `grader`, `grader_2`) are inspect_evals'.
+cais/hle is gated: loading needs `HF_TOKEN`. Install with `pip install
+"epoch-bench[hle] @ git+<this repo>@<sha>"`.
