@@ -96,7 +96,10 @@ def model_extracted_exact_match():
     return score
 
 
-@task(name="Chess Puzzles")
+# registered as bench/chess_puzzles: the name "Chess Puzzles" (Epoch's 1.x and 2.x logs
+# both record bench/Chess Puzzles) belongs to bench/task/chess_puzzles_v2, Epoch's current
+# 2.x task, so the audit can match Epoch's 2.x leaderboard logs to it
+@task
 def chess_puzzles(epochs: int = 1) -> Task:
     dataset = csv_dataset(str(Path(__file__).parent / "puzzles.csv"))
 

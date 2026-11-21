@@ -9,7 +9,9 @@ unchanged apart from imports:
 - `qa_agent.py`, `submission.py`, `forced_answer.py`: from `bench/solver/`, with
   `bench.solver.*` imports pointing here.
 
-The task below is the mirror's `Chess Puzzles` task with one change: its two required
+The task below is the mirror's `Chess Puzzles` task, registered under the mirror's own name
+(`bench/Chess Puzzles`, the task name Epoch's 2.x logs record, so an audit can match
+those logs to it), with one change: its two required
 arguments get defaults, Epoch's published settings (1,000,000 output tokens, compaction
 at 945,000 input tokens, i.e. 90% of a 1.05M-token window), so the task loads by name
 with no arguments. Sample ids are 1-100 in CSV order (`auto_id=True`), as in Epoch's
@@ -50,7 +52,7 @@ FINAL_ANSWER_PROMPT = (
 )
 
 
-@task
+@task(name="Chess Puzzles")
 def chess_puzzles_v2(
     *,
     epochs: int = 1,
@@ -77,7 +79,7 @@ def chess_puzzles_v2(
         epochs=Epochs(epochs, ["mean"]),
         metadata={
             "epochai-benchmark-version": VERSION,
-            "wrapper": "bench/chess_puzzles_v2",
+            "wrapper": "bench/task/chess_puzzles_v2",
             "mirror_revision": MIRROR_REVISION,
         },
     )

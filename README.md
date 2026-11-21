@@ -42,7 +42,7 @@ cais/hle is gated: loading needs `HF_TOKEN`. Install with `pip install
 "epoch-bench[hle] @ git+<this repo>@<sha>"`.
 
 
-## Chess Puzzles 2.1.0 (`bench/chess_puzzles_v2`)
+## Chess Puzzles 2.1.0 (`bench/Chess Puzzles`)
 
 `bench/task/chess_puzzles_v2/` is Epoch's current Chess Puzzles task (version 2.1.0)
 vendored from https://github.com/epoch-research/chess-puzzles-mirror @ 62f4f8d3: the
@@ -52,5 +52,7 @@ the position with python-chess). The mirror's package is also named `bench`, so 
 are copied here with only their imports changed; the task's two required arguments
 default to Epoch's published settings (`max_output_tokens=1000000`,
 `compaction_threshold_tokens=945000`). Sample ids are 1-100; the puzzles are the same 100
-as the 1.x reconstruction above. python-chess is a base dependency. Install with `pip install "epoch-bench @
+as the 1.x reconstruction above. The task is registered as `bench/Chess Puzzles`, the
+name Epoch's 2.x logs record (as the mirror registers it), so an audit can match those logs
+to it; the 1.x reconstruction is registered as `bench/chess_puzzles`. python-chess is a base dependency. Install with `pip install "epoch-bench @
 git+<this repo>@<sha>"`.
