@@ -71,6 +71,15 @@ jobs:
           for language in ${{ matrix.languages }}; do
             build_dir="build_${language}"
             uv run python scripts/write_dockerfile.py "${{ matrix.target }}" "$language" "$build_dir/" --reference-binary
+            # wren_cli's builder stage is debian:11, whose bullseye-security packages have
+            # left deb.debian.org (404). Point that stage at archive.debian.org (fallback:
+            # snapshot.debian.org). The wren_cli binary is static, so nothing else changes.
+            printf '%s\n' \
+              "RUN echo 'Acquire::Check-Valid-Until \"false\";' > /etc/apt/apt.conf.d/99no-valid-until && \\" \
+              "    for m in http://archive.debian.org/debian-security http://snapshot.debian.org/archive/debian-security/20260801T000000Z; do \\" \
+              "      sed -i -E \"s#^(deb )http://[^ ]+/debian-security#\\1\$m#\" /etc/apt/sources.list && apt-get update && break; done" \
+              > bullseye-fix.txt
+            sed -i '/^FROM debian:11 AS builder$/r bullseye-fix.txt' "$build_dir"/*.Dockerfile
             success=false
             for attempt in 1 2; do
               echo "Attempt $attempt: ${{ matrix.target }} / $language"
