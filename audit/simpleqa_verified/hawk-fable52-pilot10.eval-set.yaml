@@ -1,6 +1,7 @@
 # SimpleQA Verified, Epoch's setup (question + anti-abstention suffix, their scorer and grader template), Claude Fable 5.2 at reasoning
 # effort max, grader gpt-5.6-terra at medium as in Epoch's logs. A seeded shuffle of the 1,000 questions, first 10: the pilot's 10 are the
 # first 10 of the 200. Not Epoch's: max_tokens (theirs is unset; set here so max-effort thinking is not cut off) and the per-sample token limit (100,000, about $4 at most).
+# Model names: Hawk's proxy knows OpenRouter models as openrouter/{org}/{slug}; Inspect's openrouter provider strips one "openrouter/", hence two.
 name: simpleqa-epoch-fable52-pilot10
 tasks:
 - package: git+https://github.com/Generality-Labs/epoch_bench@e0ce88d6667cae2b4b38031f8e313648c59b528d
@@ -10,7 +11,7 @@ tasks:
 models:
 - package: inspect-ai
   items:
-  - name: openrouter/anthropic/claude-fable-5.2
+  - name: openrouter/openrouter/anthropic/claude-fable-5.2
     args:
       config:
         reasoning_effort: max
@@ -19,7 +20,7 @@ model_roles:
   grader:
     package: inspect-ai
     items:
-    - name: openrouter/openai/gpt-5.6-terra
+    - name: openrouter/openrouter/openai/gpt-5.6-terra
       args:
         config:
           reasoning_effort: medium
