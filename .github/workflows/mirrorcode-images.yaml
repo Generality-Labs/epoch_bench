@@ -1,0 +1,83 @@
+# Builds the MirrorCode sandbox images needed to audit Epoch's MirrorCode runs on
+# Hawk and pushes them to ghcr.io/generality-labs/mirrorcode. Adapted from
+# upstream's .github/workflows/build-docker-images.yaml (epoch-research/MirrorCode).
+# Tags follow mc's scheme: mc_{target}_{lang}_llm_{workspace|reference-scoring|agent-scoring}_{version}.
+# Point the task at these images with MC_IMAGE_NAME=ghcr.io/generality-labs/mirrorcode.
+name: MirrorCode images
+on:
+  push:
+    branches: [mirrorcode-images]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  UV_VERSION: "0.9.1"
+  MC_REPO: epoch-research/MirrorCode
+  MC_REF: 5c9d7b00b0c6d7609003e33896cd41d28f092fcb # mc 0.1.193
+  MC_IMAGE_NAME: ghcr.io/generality-labs/mirrorcode
+
+jobs:
+  publish:
+    name: publish (${{ matrix.target }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      max-parallel: 13
+      # The (target, language) pairs in Epoch's imported runs on Hawk
+      # (imported-mirrorcode-epoch-*: 13 programs x Go/Ada, plus two Python).
+      matrix:
+        include:
+          - { target: bib2json, languages: "Go Ada" }
+          - { target: brotlid, languages: "Go Ada" }
+          - { target: cprepro, languages: "Go Python" }
+          - { target: giac_subset, languages: "Go Ada" }
+          - { target: gotree, languages: "Ada Python" }
+          - { target: mailauth, languages: "Go Ada" }
+          - { target: nonogrid, languages: "Go Ada" }
+          - { target: pkl, languages: "Go Ada" }
+          - { target: ruff, languages: "Go Ada" }
+          - { target: sed, languages: "Go Ada" }
+          - { target: texmacros, languages: "Go Ada" }
+          - { target: tssql, languages: "Go Ada" }
+          - { target: wren_cli, languages: "Go Ada" }
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.MC_REPO }}
+          ref: ${{ env.MC_REF }}
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: pyproject.toml
+
+      - name: Build and push (reference_binary=true variant)
+        run: |-
+          export SOURCE_DATE_EPOCH="$(git log -1 --pretty=%ct)"
+          for language in ${{ matrix.languages }}; do
+            build_dir="build_${language}"
+            uv run python scripts/write_dockerfile.py "${{ matrix.target }}" "$language" "$build_dir/" --reference-binary
+            success=false
+            for attempt in 1 2; do
+              echo "Attempt $attempt: ${{ matrix.target }} / $language"
+              ( cd "$build_dir" && docker buildx bake -f compose.yaml \
+                  --set "*.platform=linux/amd64" \
+                  --set "*.labels.org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}" \
+                  --push ) && { success=true; break; }
+            done
+            [ "$success" = true ] || { echo "Failed: ${{ matrix.target }} / $language"; exit 1; }
+          done
