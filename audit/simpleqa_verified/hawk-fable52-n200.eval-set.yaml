@@ -3,7 +3,7 @@
 # first 10 of the 200. Not Epoch's: max_tokens (theirs is unset; set here so max-effort thinking is not cut off) and the per-sample cost cap.
 name: simpleqa-epoch-fable52-n200
 tasks:
-- package: git+https://github.com/Generality-Labs/epoch_bench@3a8a149dac2086921da715b225ba4f99ff5ad6b3
+- package: git+https://github.com/Generality-Labs/epoch_bench@e0ce88d6667cae2b4b38031f8e313648c59b528d
   name: bench
   items:
   - name: simpleqa_verified_anti_abstention
