@@ -3,7 +3,7 @@ name = "epoch-bench"
 version = "0.1.0"
 description = "Epoch AI's Chess Puzzles task, reconstructed from their published source and logs, for auditing"
 requires-python = ">=3.11"
-dependencies = ["inspect-ai>=0.3.152"]
+dependencies = ["inspect-ai>=0.3.152", "datasets"]
 
 [project.entry-points.inspect_ai]
 bench = "bench._registry"
