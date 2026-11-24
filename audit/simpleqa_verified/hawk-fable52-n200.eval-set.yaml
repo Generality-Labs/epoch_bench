@@ -1,0 +1,35 @@
+# SimpleQA Verified, Epoch's setup (question + anti-abstention suffix, their scorer and grader template), Claude Fable 5.2 at reasoning
+# effort max, grader gpt-5.6-terra at medium as in Epoch's logs. A seeded shuffle of the 1,000 questions, first 200: the pilot's 10 are the
+# first 10 of the 200. Not Epoch's: max_tokens (theirs is unset; set here so max-effort thinking is not cut off) and the per-sample cost cap.
+name: simpleqa-epoch-fable52-n200
+tasks:
+- package: git+https://github.com/Generality-Labs/epoch_bench@3a8a149dac2086921da715b225ba4f99ff5ad6b3
+  name: bench
+  items:
+  - name: simpleqa_verified_anti_abstention
+models:
+- package: inspect-ai
+  items:
+  - name: openrouter/anthropic/claude-fable-5.2
+    args:
+      config:
+        reasoning_effort: max
+        max_tokens: 64000
+model_roles:
+  grader:
+    package: inspect-ai
+    items:
+    - name: openrouter/openai/gpt-5.6-terra
+      args:
+        config:
+          reasoning_effort: medium
+sample_shuffle: 20261124
+limit: 200
+epochs: 1
+max_connections: 20
+max_retries: 7
+retry_attempts: 1
+cost_limit: 2.0
+runner:
+  environment:
+    HAWK_API_URL: https://api.hawk.hawk.generalitylabs.ai
